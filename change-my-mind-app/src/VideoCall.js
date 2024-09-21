@@ -5,7 +5,7 @@ import io from 'socket.io-client';
 import { useAuth } from './firebase/AuthContext';
 import './VideoCall.css';
 
-const socket = io('http://localhost:5000');
+const socket = io('http://localhost:3391');
 
 const VideoCall = () => {
   const { roomId } = useParams();
@@ -22,15 +22,15 @@ const VideoCall = () => {
       return;
     }
 
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
       setStream(stream);
       myVideo.current.srcObject = stream;
 
-      socket.emit('join-room', roomId);
+      socket.emit('join-room', { roomId, userId: user.uid });
 
-      socket.on('all-users', (users) => {
+      socket.on('all-users', users => {
         const peers = [];
-        users.forEach((userId) => {
+        users.forEach(userId => {
           const peer = createPeer(userId, socket.id, stream);
           peersRef.current.push({
             peerID: userId,
@@ -41,17 +41,17 @@ const VideoCall = () => {
         setPeers(peers);
       });
 
-      socket.on('user-joined', (payload) => {
+      socket.on('user-joined', payload => {
         const peer = addPeer(payload.signal, payload.callerID, stream);
         peersRef.current.push({
           peerID: payload.callerID,
           peer,
         });
-        setPeers((users) => [...users, peer]);
+        setPeers(users => [...users, peer]);
       });
 
-      socket.on('receiving-returned-signal', (payload) => {
-        const item = peersRef.current.find((p) => p.peerID === payload.id);
+      socket.on('receiving-returned-signal', payload => {
+        const item = peersRef.current.find(p => p.peerID === payload.id);
         item.peer.signal(payload.signal);
       });
     });
@@ -59,7 +59,7 @@ const VideoCall = () => {
     return () => {
       socket.disconnect();
     };
-  }, [roomId, user, navigate]);
+  }, [user, navigate, roomId]);
 
   function createPeer(userToSignal, callerID, stream) {
     const peer = new Peer({
@@ -68,17 +68,8 @@ const VideoCall = () => {
       stream,
     });
 
-    peer.on('signal', (signal) => {
+    peer.on('signal', signal => {
       socket.emit('sending-signal', { userToSignal, callerID, signal });
-    });
-
-    peer.on('stream', (stream) => {
-      const videoElement = document.createElement('video');
-      videoElement.srcObject = stream;
-      videoElement.playsInline = true;
-      videoElement.autoPlay = true;
-      videoElement.className = 'user-video';
-      document.querySelector('.video-container').appendChild(videoElement);
     });
 
     return peer;
@@ -91,17 +82,8 @@ const VideoCall = () => {
       stream,
     });
 
-    peer.on('signal', (signal) => {
+    peer.on('signal', signal => {
       socket.emit('returning-signal', { signal, callerID });
-    });
-
-    peer.on('stream', (stream) => {
-      const videoElement = document.createElement('video');
-      videoElement.srcObject = stream;
-      videoElement.playsInline = true;
-      videoElement.autoPlay = true;
-      videoElement.className = 'user-video';
-      document.querySelector('.video-container').appendChild(videoElement);
     });
 
     peer.signal(incomingSignal);
@@ -110,15 +92,25 @@ const VideoCall = () => {
   }
 
   return (
-    <div className="video-call">
-      <div className="video-container">
-        <video playsInline muted ref={myVideo} autoPlay className="my-video" />
-        {peers.map((peer, index) => (
-          <video key={index} playsInline autoPlay className="user-video" />
-        ))}
-      </div>
+    <div>
+      <video ref={myVideo} autoPlay playsInline />
+      {peers.map((peer, index) => {
+        return <Video key={index} peer={peer} />;
+      })}
     </div>
   );
+};
+
+const Video = ({ peer }) => {
+  const ref = useRef();
+
+  useEffect(() => {
+    peer.on('stream', stream => {
+      ref.current.srcObject = stream;
+    });
+  }, [peer]);
+
+  return <video ref={ref} autoPlay playsInline />;
 };
 
 export default VideoCall;
