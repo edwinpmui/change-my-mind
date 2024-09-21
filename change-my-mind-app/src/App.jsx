@@ -6,6 +6,8 @@ import GlobalChatRoom from './firebase/GlobalChatRoom';
 import VideoCall from './VideoCall';
 import { AuthProvider } from './firebase/AuthContext';
 import './App.css';
+import Hero from './components';
+import SideBar from './components';
 
 function App() {
   return (
