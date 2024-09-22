@@ -1,1 +1,1 @@
-README
+Change My Mind -- the app
