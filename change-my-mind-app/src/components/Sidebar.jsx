@@ -19,13 +19,7 @@ const SideBar = () => {
       </div>
       <ul className="flex flex-col mt-6 space-y-1 items-center">
         <li><a href="#d1" className="text-lg text-gray-800">D1</a></li>
-        <button class="btn btn-blue">Button
-        </button>
-
-        
-        <li><a href="#d2" className="text-lg text-gray-800">D2</a></li>
-        <li><a href="#d3" className="text-lg text-gray-800">D3</a></li>
-        <li><a href="#login" className="text-lg text-gray-800">Login</a></li>
+        <button className="btn btn-blue">Button</button>
       </ul>
     </nav>
   );

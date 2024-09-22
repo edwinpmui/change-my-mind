@@ -6,20 +6,34 @@ import GlobalChatRoom from './firebase/GlobalChatRoom';
 import VideoCall from './VideoCall';
 import PreferenceForm from './firebase/PreferenceForm';
 import { AuthProvider } from './firebase/AuthContext';
+import Hero from './components/Hero';
+import Sidebar from './components/Sidebar';
+import SideChat from './components/SideChat';
+import TopBar from './components/TopBar';
 import './App.css';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <Routes>
-          <Route path="/" element={<Chat />} />
-          <Route path="/chat/:userId" element={<ChatRoom />} />
-          <Route path="/global-chat" element={<GlobalChatRoom />} />
-          <Route path="/video-call/:userId" element={<VideoCall />} />
-          <Route path="/preferences" element={<PreferenceForm />} />
-          <Route path="/chat-room/:roomId" element={<ChatRoom />} />
-        </Routes>
+        <div className="flex flex-col h-screen">
+          <TopBar />
+          <div className="flex flex-1">
+            <Sidebar />
+            <div className="flex-1 p-4 ml-48 mt-16">
+              <Hero />
+              <Routes>
+                <Route path="/" element={<Chat />} />
+                <Route path="/chat/:userId" element={<ChatRoom />} />
+                <Route path="/global-chat" element={<GlobalChatRoom />} />
+                <Route path="/video-call/:userId" element={<VideoCall />} />
+                <Route path="/preferences" element={<PreferenceForm />} />
+                <Route path="/chat-room/:roomId" element={<ChatRoom />} />
+              </Routes>
+            </div>
+            <SideChat />
+          </div>
+        </div>
       </Router>
     </AuthProvider>
   );
