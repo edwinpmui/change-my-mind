@@ -6,7 +6,7 @@ import { useAuth } from './AuthContext';
 
 const ChatRoom = () => {
   const { user } = useAuth();
-  const { roomId } = useParams();
+  const { roomId } = useParams(); // Ensure roomId is obtained from useParams
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
 
@@ -23,15 +23,22 @@ const ChatRoom = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (newMessage.trim() !== '') {
-      await addDoc(collection(db, 'messages'), {
-        roomId,
-        userId: user.uid,
-        userName: user.displayName || user.email, // Use displayName or email as the user identifier
-        message: newMessage,
-        timestamp: new Date(),
-      });
-      setNewMessage('');
+    if (newMessage.trim() !== '' && roomId) { // Ensure roomId is not undefined
+      try {
+        await addDoc(collection(db, 'messages'), {
+          roomId,
+          userId: user.uid,
+          userName: user.displayName || user.email, // Use displayName or email as the user identifier
+          message: newMessage,
+          timestamp: new Date(),
+        });
+        setNewMessage('');
+        console.log('Message sent successfully');
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
+    } else {
+      console.warn('Message or roomId is invalid');
     }
   };
 
@@ -40,7 +47,7 @@ const ChatRoom = () => {
       <div className="messages">
         {messages.map((msg, index) => (
           <div key={index} className="message">
-            <span><strong>{msg.userName}</strong></span>: {msg.message}
+            <strong>{msg.userName}</strong>: {msg.message}
           </div>
         ))}
       </div>
