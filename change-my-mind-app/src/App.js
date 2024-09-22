@@ -1,24 +1,30 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Chat from './Chat';
+import { AuthProvider } from './firebase/AuthContext';
+import Login from './Login';
+import HomePage from './HomePage';
 import ChatRoom from './firebase/ChatRoom';
 import GlobalChatRoom from './firebase/GlobalChatRoom';
 import VideoCall from './VideoCall';
-import { AuthProvider } from './firebase/AuthContext';
-import './App.css';
+import DebateRoom from './firebase/DebateRoom'; // Import the DebateRoom component
+import DebatePage from './DebatePage';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Routes>
-          <Route path="/" element={<Chat />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/chat/:userId" element={<ChatRoom />} />
           <Route path="/global-chat" element={<GlobalChatRoom />} />
           <Route path="/video-call/:userId" element={<VideoCall />} />
+          <Route path="/debate-room/topic1" element={<DebatePage topic="topic1" />} />
+          <Route path="/debate-room/topic2" element={<DebatePage topic="topic2" />} />
+          <Route path="/debate-room/topic3" element={<DebatePage topic="topic3" />} />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

@@ -59,7 +59,6 @@ const UserList = () => {
           </li>
         ))}
       </ul>
-      <button onClick={() => navigate('/global-chat')}>Global Chat</button>
       {currentUser ? (
         <button onClick={logout}>Sign Out</button>
       ) : (

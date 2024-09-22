@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth, provider, db } from './firebase';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { collection, doc, getDoc, setDoc, onSnapshot, getDocs } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
@@ -9,6 +10,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -39,7 +41,10 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = () => signInWithPopup(auth, provider);
-  const logout = () => signOut(auth);
+  const logout = () => {
+    signOut(auth);
+    navigate("/");
+  };
 
   const findUsers = async () => {
     const usersSnapshot = await getDocs(collection(db, 'users'));
