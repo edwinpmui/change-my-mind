@@ -19,9 +19,9 @@ function App() {
           <Route path="/chat/:userId" element={<ChatRoom />} />
           <Route path="/global-chat" element={<GlobalChatRoom />} />
           <Route path="/video-call/:userId" element={<VideoCall />} />
-          <Route path="/debate-room/topic1" element={<DebatePage topic="topic1" />} />
-          <Route path="/debate-room/topic2" element={<DebatePage topic="topic2" />} />
-          <Route path="/debate-room/topic3" element={<DebatePage topic="topic3" />} />
+          <Route path="/debate-room/topic1" element={<DebatePage topic="More Doors or Windows" />} />
+          <Route path="/debate-room/topic2" element={<DebatePage topic="Trump vs Kamala" />} />
+          <Route path="/debate-room/topic3" element={<DebatePage topic="Flat Earth?" />} />
         </Routes>
       </AuthProvider>
     </Router>

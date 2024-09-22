@@ -65,7 +65,7 @@ const DebatePage = ({ topic }) => {
                 </Drawer>
                 <Container maxWidth="lg" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                     <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start" mt={4} ml={2} width="100%">
-                        <Paper elevation={3} style={{ width: '30%', padding: '16px' }}>
+                        <Paper elevation={3} style={{ width: '93%', padding: '16px' }}>
                             <DebateRoom topic={topic} />
                         </Paper>
                     </Box>

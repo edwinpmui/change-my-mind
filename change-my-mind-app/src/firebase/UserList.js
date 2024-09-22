@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import { Box, Button, CircularProgress, Typography, List, ListItem, ListItemText } from '@mui/material';
 import './UserList.css';
 
 const UserList = () => {
@@ -31,40 +32,51 @@ const UserList = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (!currentUser) {
     return (
-      <div>
-        <p>Please sign in to view the user list.</p>
-        <button onClick={login}>Sign In</button>
-      </div>
+      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100vh">
+        <Typography variant="h6" gutterBottom>
+          Please sign in to view the user list.
+        </Typography>
+        <Button variant="contained" color="primary" onClick={login}>
+          Sign In
+        </Button>
+      </Box>
     );
   }
 
   return (
-    <div className="user-list">
-      <h2>Users</h2>
-      <ul>
+    <Box className="user-list" p={2}>
+      <Typography variant="h4" gutterBottom>
+        Registered Users
+      </Typography>
+      <List>
         {users.map(user => (
-          <li key={user.uid} className={user.uid === currentUser.uid ? 'current-user' : ''}>
-            {user.displayName} {user.uid === currentUser.uid && '(You)'}
+          <ListItem key={user.uid} className={user.uid === currentUser.uid ? 'current-user' : ''}>
+            <ListItemText
+              primary={`${user.displayName} ${user.uid === currentUser.uid ? '(You)' : ''}`}
+            />
             {user.uid !== currentUser.uid && (
-              <>
-                <button onClick={() => handleSelectUser(user)}>Chat</button>
-                <button onClick={() => handleVideoCall(user)}>Video Call</button>
-              </>
+              <Box display="flex" gap={1}>
+                <Button variant="contained" color="primary" onClick={() => handleSelectUser(user)}>
+                  Chat
+                </Button>
+                <Button variant="contained" color="secondary" onClick={() => handleVideoCall(user)}>
+                  Video Call
+                </Button>
+              </Box>
             )}
-          </li>
+          </ListItem>
         ))}
-      </ul>
-      {currentUser ? (
-        <button onClick={logout}>Sign Out</button>
-      ) : (
-        <button onClick={login}>Sign In</button>
-      )}
-    </div>
+      </List>
+    </Box>
   );
 };
 
