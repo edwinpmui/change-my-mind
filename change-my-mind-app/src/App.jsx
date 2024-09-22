@@ -1,8 +1,3 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Chat from './Chat';
-import ChatRoom from './firebase/ChatRoom';
-import GlobalChatRoom from './firebase/GlobalChatRoom';
 import VideoCall from './VideoCall';
 import PreferenceForm from './firebase/PreferenceForm';
 import { AuthProvider } from './firebase/AuthContext';
@@ -10,9 +5,13 @@ import Hero from './components/Hero';
 import Sidebar from './components/Sidebar';
 import SideChat from './components/SideChat';
 import TopBar from './components/TopBar';
-import HomePage from './components/HomePage'; // Import HomePage
-import LoginPage from './components/LoginPage'; // Import LoginPage
 import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Chat from './Chat';
+import ChatRoom from './firebase/ChatRoom';
+import GlobalChatRoom from './firebase/GlobalChatRoom';
+
 
 function App() {
   return (
@@ -25,8 +24,7 @@ function App() {
             <div className="flex-1 p-4 ml-48 mt-16">
               <Hero />
               <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<LoginPage />} /> {/* Add LoginPage route */}
+                <Route path="/" element={<Chat />} />
                 <Route path="/chat/:userId" element={<ChatRoom />} />
                 <Route path="/global-chat" element={<GlobalChatRoom />} />
                 <Route path="/video-call/:userId" element={<VideoCall />} />
