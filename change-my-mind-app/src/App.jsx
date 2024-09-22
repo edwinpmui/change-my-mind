@@ -10,6 +10,8 @@ import Hero from './components/Hero';
 import Sidebar from './components/Sidebar';
 import SideChat from './components/SideChat';
 import TopBar from './components/TopBar';
+import HomePage from './components/HomePage'; // Import HomePage
+import LoginPage from './components/LoginPage'; // Import LoginPage
 import './App.css';
 
 function App() {
@@ -24,15 +26,15 @@ function App() {
               <Hero />
               <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} /> {/* Add LoginPage route */}
                 <Route path="/chat/:userId" element={<ChatRoom />} />
-              <Route path="/global-chat" element={<GlobalChatRoom />} />
+                <Route path="/global-chat" element={<GlobalChatRoom />} />
                 <Route path="/video-call/:userId" element={<VideoCall />} />
-            <Route path="/preferences" element={<PreferenceForm />} />
-            <Route path="/chat-room/:roomId" element={<ChatRoom />} />
-            <Route path="/login" element={<LoginPage />} />
+                <Route path="/preferences" element={<PreferenceForm />} />
+                <Route path="/chat-room/:roomId" element={<ChatRoom />} />
               </Routes>
+              <SideChat />
             </div>
-            <SideChat />
           </div>
         </div>
       </Router>
