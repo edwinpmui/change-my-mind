@@ -1,4 +1,5 @@
 import React from 'react';
+import PublicDebate from './PublicDebate';
 
 const Hero = () => {
   return (

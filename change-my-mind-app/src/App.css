@@ -1,19 +1,35 @@
-.chat-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  max-width: 600px;
-  margin: 0 auto;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  overflow: hidden;
+.top-bar {
+  width: 100%;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
 }
 
-.messages {
-  flex: 1;
+.container {
+  display: flex;
+  height: calc(100vh - 50px); /* Adjust height to account for the top bar */
+}
+
+.side-bar {
+  width: 20%;
+  background-color: #f1f1f1;
   padding: 10px;
   overflow-y: auto;
-  background-color: #f9f9f9;
+}
+
+.hero {
+  flex: 1;
+  background-color: #fff;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.side-chat {
+  width: 20%;
+  background-color: #f1f1f1;
+  padding: 10px;
+  overflow-y: auto;
 }
 
 .message {
