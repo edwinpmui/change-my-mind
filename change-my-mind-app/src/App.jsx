@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Chat from './Chat';
 import ChatRoom from './firebase/ChatRoom';
@@ -24,12 +23,13 @@ function App() {
             <div className="flex-1 p-4 ml-48 mt-16">
               <Hero />
               <Routes>
-                <Route path="/" element={<Chat />} />
+                <Route path="/" element={<HomePage />} />
                 <Route path="/chat/:userId" element={<ChatRoom />} />
-                <Route path="/global-chat" element={<GlobalChatRoom />} />
+              <Route path="/global-chat" element={<GlobalChatRoom />} />
                 <Route path="/video-call/:userId" element={<VideoCall />} />
-                <Route path="/preferences" element={<PreferenceForm />} />
-                <Route path="/chat-room/:roomId" element={<ChatRoom />} />
+            <Route path="/preferences" element={<PreferenceForm />} />
+            <Route path="/chat-room/:roomId" element={<ChatRoom />} />
+            <Route path="/login" element={<LoginPage />} />
               </Routes>
             </div>
             <SideChat />
