@@ -1,70 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { collection, addDoc, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from './firebase';
 import { useAuth } from './AuthContext';
-import Message from '../Message';
-import '../App.css';
 
 const ChatRoom = () => {
-  const { userId } = useParams();
+  const { user } = useAuth();
+  const { roomId } = useParams();
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const { user, login } = useAuth();
-  const navigate = useNavigate();
+  const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
-    if (userId && user) {
-      const chatId = [user.uid, userId].sort().join('_');
-      const q = query(collection(db, `chats/${chatId}/messages`), orderBy('timestamp'));
+    if (roomId) {
+      const q = query(collection(db, 'messages'), where('roomId', '==', roomId));
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const msgs = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setMessages(msgs);
+        const messages = querySnapshot.docs.map(doc => doc.data());
+        setMessages(messages);
       });
-
       return () => unsubscribe();
     }
-  }, [userId, user]);
+  }, [roomId]);
 
-  const handleSubmit = async (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (input.trim()) {
-      const chatId = [user.uid, userId].sort().join('_');
-      await addDoc(collection(db, `chats/${chatId}/messages`), {
-        text: input,
-        user: user.displayName,
-        timestamp: serverTimestamp()
+    if (newMessage.trim() !== '') {
+      await addDoc(collection(db, 'messages'), {
+        roomId,
+        userId: user.uid,
+        userName: user.displayName || user.email, // Use displayName or email as the user identifier
+        message: newMessage,
+        timestamp: new Date(),
       });
-      setInput('');
+      setNewMessage('');
     }
   };
 
-  if (!user) {
-    return (
-      <div className="chat-room">
-        <p>Please sign in to view the chat room.</p>
-        <button onClick={login}>Sign In</button>
-      </div>
-    );
-  }
-
   return (
     <div className="chat-room">
-      <button onClick={() => navigate(-1)}>Back</button>
       <div className="messages">
-        {messages.map((msg) => (
-          <Message key={msg.id} text={msg.text} user={msg.user} />
+        {messages.map((msg, index) => (
+          <div key={index} className="message">
+            <span><strong>{msg.userName}</strong></span>: {msg.message}
+          </div>
         ))}
       </div>
-      <form className="chat-input" onSubmit={handleSubmit}>
+      <form onSubmit={handleSendMessage}>
         <input
           type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type a message..."
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          placeholder="Type your message..."
         />
         <button type="submit">Send</button>
       </form>
